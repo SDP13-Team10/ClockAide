@@ -1,7 +1,7 @@
 #include <EasyStepper.h>
 #include <Time.h>  
 #include <ClockAide.h>
-
+ 
 ////////////////////////////////////////////////////////////////////////
 ////////////////  Encoder  /////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
@@ -32,11 +32,11 @@ int m_count = 0;
 ////////////////////////////////////////////////////////////////////////
 
 const int stepsPerRevolution = 200;
-int opticalSensorPinHour = 15;
-int opticalSensorPinMinute = 14;
+int opticalSensorPinHour = A1;
+int opticalSensorPinMinute = 12;
 
-EasyStepper hours(stepsPerRevolution, 4,5,6,7);   
-EasyStepper minutes(stepsPerRevolution, 8,9,10,11);   
+EasyStepper hours(stepsPerRevolution, 7,6,5,4);   
+EasyStepper minutes(stepsPerRevolution, 11,10,9,8);   
 
 
 ////////////////////////////////////////////////////////////////////////

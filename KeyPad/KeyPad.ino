@@ -47,7 +47,7 @@ int pi_month;
 int pi_year;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-
+int led = 13;
 
 void setup()
 {
@@ -55,10 +55,15 @@ void setup()
         Initialize serial communication with R. Pi
         Default mode = Normal       
     */
+    pinMode(led, OUTPUT);
     Serial.begin(9600);
+    delay(500);
     myLCD.clearLCD();
+    myLCD.writeToScreen("ClockAide",0,0);
+    myLCD.writeToScreen("Loading...",1,0);
+    digitalWrite(led, HIGH);
     while(Serial.available() == 0);
-
+    digitalWrite(led, LOW);
     // Get Time from Raspberry Pi
     while (Serial.available() > 0){
         pi_hour  = Serial.parseInt();
@@ -91,16 +96,17 @@ void loop()
                  myLCD.writeToScreen("ClockAide  " + String(hourFormat12()) + ":" + String(minute()), 0,0);
                  myLCD.writeToScreen("Press Any Button", 1,0);
              }
-             
-             // Wait for button to be pressed
+
+                       // Wait for button to be pressed
              p = keypad.getKey();
-             if(p != '\0')
-             {
+             if(p){  
                  // Send "Wake-up" Message to Pi
-                 sendToPi(WAKE_UP);                 
+                 sendToPi(WAKE_UP);
+                 //sendToPi('a');                 
                  // Get Mode from Pi
                  mode = getFromPi();
-             }            
+             }
+           
        break; 
              
        case CHECK_ID:            // Check ID 
@@ -135,7 +141,7 @@ void loop()
                       myLCD.writeToScreen("Invalid Mode", 0,0);
                       myLCD.writeToScreen("Start Again", 1,0);
                       mode = 0;
-                      delay(3000);
+                      delay(5000);
                  }
                  
              }
@@ -144,7 +150,7 @@ void loop()
                  myLCD.writeToScreen("Invalid ID", 0,0);
                  myLCD.writeToScreen("Start Again", 1,0);
                  mode = 0;
-                 delay(3000);               
+                 delay(5000);               
              }
              
        break;
@@ -185,7 +191,11 @@ void loop()
              }
              myLCD.clearLCD();
              myLCD.writeToScreen("Turn knobs to", 0,0);
-             myLCD.writeToScreen(String(pi_hour) + ":" + String(pi_mins), 1,0);
+             if (pi_hour > 12){
+                 myLCD.writeToScreen(String(pi_hour%12) + ":" + String(pi_mins) + "&Press Enter", 1,0);
+             }
+             else
+                 myLCD.writeToScreen(String(pi_hour) + ":" + String(pi_mins) + "&Press Enter", 1,0);
              
              mode = getFromPi();            
              
@@ -339,7 +349,7 @@ String getTime(){
   
 }
 
-void sendToPi(char c){
+void sendToPi(int c){
       Serial.print(c); 
 }
 
