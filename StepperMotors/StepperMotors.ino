@@ -32,8 +32,8 @@ int m_count = 0;
 ////////////////////////////////////////////////////////////////////////
 
 const int stepsPerRevolution = 200;
-int opticalSensorPinHour = A1;
-int opticalSensorPinMinute = 12;
+int opticalSensorPinHour = A4;
+int opticalSensorPinMinute = A5;
 
 EasyStepper hours(stepsPerRevolution, 7,6,5,4);   
 EasyStepper minutes(stepsPerRevolution, 11,10,9,8);   
@@ -105,7 +105,7 @@ void loop()
           
              if(Serial.available() > 0){
                mode = Serial.parseInt();
-               // Serial.println(mode);
+               
              }
        break; 
              
@@ -138,8 +138,10 @@ void loop()
              while(Serial.available() == 0);
              
              if(Serial.available() > 0){
-               mode = Serial.parseInt();
+               mode = Serial.parseInt();               
              }
+             minutes.findZero(opticalSensorPinMinute);
+             hours.findZero(opticalSensorPinHour); 
        break;
        
        case SET:             // Set Mode
@@ -199,16 +201,19 @@ void loop()
                     //Serial.println(h_count);
                     //Serial.println(hours.calculateHourPosition(h_count%200));
                     
-                    Serial.println(m_count);
-                    Serial.println(minutes.calculateMinutePosition(m_count%200));
+                    //Serial.println(m_count);
+                    //Serial.println(minutes.calculateMinutePosition(m_count%200));
                   
                     // Empty Serial Buffer 
-                   while (Serial.read() >= 0);
+                   //while (Serial.read() >= 0);
                    
                    while(Serial.available() > 0){
                      mode = Serial.parseInt();
-                     Serial.println(mode);
+                    
+                      minutes.findZero(opticalSensorPinMinute);
+                      hours.findZero(opticalSensorPinHour);
                    }
+                  
                    
              }  
        break;

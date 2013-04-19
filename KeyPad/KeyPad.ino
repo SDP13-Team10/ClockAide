@@ -35,7 +35,7 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 int mode;
 int response;
 String Name = "";
-char p;
+
 
 // Variables to recieve time from Raspberry Pi
 
@@ -77,7 +77,7 @@ void setup()
     setTime(pi_hour, pi_mins, pi_secs, pi_day, pi_month, pi_year);
       
     
-    // setTime(16, 23, 0, 10, 3, 2013);
+    // setTime(16, 3, 0, 10, 3, 2013);
 
 }
 
@@ -85,28 +85,54 @@ void setup()
 
 void loop()
 {
+    
     switch(mode){
        case NORMAL:            // Normal Mode
              //myLCD.clearLCD();
+             {
+             
              if(hourFormat12() < 10){
-                 myLCD.writeToScreen("ClockAide  0" + String(hourFormat12()) + ":" + String(minute()), 0,0);
-                 myLCD.writeToScreen("Press Any Button", 1,0);
+                 if(minute()<10){
+                     myLCD.writeToScreen("ClockAide  0" + String(hourFormat12()) + ":0" + String(minute()), 0,0);
+                     myLCD.writeToScreen("Press Any Button", 1,0);
+                 }
+                 else{
+                     myLCD.writeToScreen("ClockAide  0" + String(hourFormat12()) + ":" + String(minute()), 0,0);
+                     myLCD.writeToScreen("Press Any Button", 1,0);
+                 }
              }
              else{
-                 myLCD.writeToScreen("ClockAide  " + String(hourFormat12()) + ":" + String(minute()), 0,0);
-                 myLCD.writeToScreen("Press Any Button", 1,0);
+                 if(minute()<10){
+                     myLCD.writeToScreen("ClockAide  " + String(hourFormat12()) + ":0" + String(minute()), 0,0);
+                     myLCD.writeToScreen("Press Any Button", 1,0);
+                 }
+                 else{
+                     myLCD.writeToScreen("ClockAide  " + String(hourFormat12()) + ":" + String(minute()), 0,0);
+                     myLCD.writeToScreen("Press Any Button", 1,0);
+                 }
              }
 
-                       // Wait for button to be pressed
+             // Wait for button to be pressed
+             char p = '\0';
              p = keypad.getKey();
-             if(p){  
-                 // Send "Wake-up" Message to Pi
-                 sendToPi(WAKE_UP);
-                 //sendToPi('a');                 
-                 // Get Mode from Pi
-                 mode = getFromPi();
+             while (p != '\0'){
+                 if(p == '*' || p == '#'){  
+                     // Send "Wake-up" Message to Pi
+                     // sendToPi(p);
+                     sendToPi(WAKE_UP);
+                     //sendToPi('a');                 
+                     // Get Mode from Pi
+                     p = '\0';
+                     mode = getFromPi();
+                 }
+                 
+                 else{
+                    sendToPi(SPEAK_TIME);
+                    p = '\0';
+                    mode = getFromPi(); 
+                 }
              }
-           
+             }
        break; 
              
        case CHECK_ID:            // Check ID 
@@ -180,6 +206,8 @@ void loop()
        
        case SET: 
              // Set Mode
+             {
+             char p = '\0';
              myLCD.clearLCD();
              myLCD.writeToScreen("Set Mode", 0,0);
              // Recieve time from Pi
@@ -190,17 +218,45 @@ void loop()
                   while (Serial.read() >= 0); // Empty serial buffer
              }
              myLCD.clearLCD();
-             myLCD.writeToScreen("Turn knobs to", 0,0);
+             
              if (pi_hour > 12){
-                 myLCD.writeToScreen(String(pi_hour%12) + ":" + String(pi_mins) + "&Press Enter", 1,0);
+                 myLCD.writeToScreen("Turn knobs:" + String(pi_hour%12) + ":" + String(pi_mins), 0,0);
+                 myLCD.writeToScreen( "Press Enter", 1,0);
              }
-             else
-                 myLCD.writeToScreen(String(pi_hour) + ":" + String(pi_mins) + "&Press Enter", 1,0);
-             
+             else{
+                 myLCD.writeToScreen("Turn knobs:" + String(pi_hour) + ":" + String(pi_mins) , 0,0);
+                 myLCD.writeToScreen("Press Enter", 1,0);
+             }
+             // Wait for button to be pressed
+             p = keypad.waitForKey();
+             if(p){
+                 sendToPi(GET_TIME);
+                 myLCD.clearLCD();
+                 myLCD.writeToScreen("Processing...", 0,0);
+                 
+                 response = getFromPi();
+                 if (response == GOOD){            // Recieve name from PI
+                     myLCD.clearLCD();
+                     myLCD.writeToScreen("Good Job", 0,0);
+                     //Name = getNameFromPi();
+                     myLCD.writeToScreen(Name, 1,0);            
+                 }
+                 else{
+                 myLCD.clearLCD();
+                 myLCD.writeToScreen("That's Wrong", 0,0);
+                 myLCD.writeToScreen("Try Again", 1,0);
+            }
+             }
+            else{
+                 myLCD.clearLCD();
+                 myLCD.writeToScreen("That's Wrong", 0,0);
+                 myLCD.writeToScreen("Try Again", 1,0);
+            }
+           
              mode = getFromPi();            
-             
+             }
        break;
-       
+             
        case TEACHER: 
              // TEACHER Mode
              myLCD.clearLCD();
@@ -345,7 +401,7 @@ String getTime(){
   }
      
    
- return (String(a) + String(b) +", "+ String(c) + String(d)); // return time string 
+ return (String(a) + String(b) +","+ String(c) + String(d)); // return time string 
   
 }
 
