@@ -28,15 +28,15 @@ int h_count = 0;
 int m_count = 0;
 
 ////////////////////////////////////////////////////////////////////////
-////////////////  Stepper Motor  ///////////////////////////////////////
+////////////////  Stepper Motor  //////////////////////////////////// ///
 ////////////////////////////////////////////////////////////////////////
 
 const int stepsPerRevolution = 200;
-int opticalSensorPinHour = A4;
-int opticalSensorPinMinute = A5;
+int opticalSensorPinHour = A5;
+int opticalSensorPinMinute = A4;
 
-EasyStepper hours(stepsPerRevolution, 7,6,5,4);   
-EasyStepper minutes(stepsPerRevolution, 11,10,9,8);   
+EasyStepper hours(stepsPerRevolution, 8,9,10,11);   
+EasyStepper minutes(stepsPerRevolution, 7,6,5,4);   
 
 
 ////////////////////////////////////////////////////////////////////////
