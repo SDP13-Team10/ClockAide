@@ -57,14 +57,25 @@ int led = 13;
 
 void setup()
 {
-    /*
+
+   /*
         Initialize serial communication with R. Pi
         Default mode = Normal       
     */
     pinMode(led, OUTPUT);
     Serial.begin(9600);
     delay(500);
-    myLCD.clearLCD();
+   
+   /* 
+   myLCD.clearLCD(); 
+   myLCD.writeToScreen("ClockAide",0,0);
+   myLCD.writeToScreen("SDP '13 - UMass",1,0);
+   myLCD.setSplash();
+   delay(5000);
+   */
+   
+   myLCD.clearLCD();
+
     myLCD.writeToScreen("ClockAide",0,0);
     myLCD.writeToScreen("Loading...",1,0);
     digitalWrite(led, HIGH);
