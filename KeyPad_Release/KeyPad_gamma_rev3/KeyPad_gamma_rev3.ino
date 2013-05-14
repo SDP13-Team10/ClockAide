@@ -2,7 +2,7 @@
 //          Connect data line for LCD screen to pin 2, not TX
 // 5/13/13 Teacher mode adjusted to show user prompt. Every key is latched. Still does db extrect
 //          and file copy regardless of what key is pressed.
-
+//         Additional attempts for Read and Set modes
 
 #include <SoftwareSerial.h>
 #include <Keypad.h>
@@ -192,7 +192,7 @@ void loop()
        break;
        
        case READ:            // Read Mode
-       
+
             myLCD.clearLCD();
             myLCD.writeToScreen("Enter time HH:MM", 0,0);
             myLCD.selectLineTwo();
@@ -205,9 +205,10 @@ void loop()
                  myLCD.writeToScreen("Good Job", 0,0);
                  //Name = getNameFromPi();
                  myLCD.writeToScreen(Name, 1,0);
-         /*      delay(2);
+               delay(2);
                myLCD.clearLCD();
-               myLCD.writeToScreen("Try again?", 0,0); 
+               myLCD.writeToScreen("Try again?", 0,0);
+               myLCD.selectLineTwo(); 
                Serial.print(getOption());
                int control = getOption();
                
@@ -218,7 +219,7 @@ void loop()
                  else if (control == 2){
                      sendToPi(NORMAL);
                      mode = getFromPi();
-                 }*/
+                 }
             }
             else{
                  myLCD.clearLCD();
