@@ -45,6 +45,7 @@ EasyStepper minutes(stepsPerRevolution, 7,6,5,4);
 
 int mode;
 int temp = 0;
+int comm;
 
 // Variables to recieve time from Raspberry Pi
 
@@ -145,49 +146,46 @@ void loop()
        break;
        
        case SET:             // Set Mode
-             minutes.findZero(opticalSensorPinMinute);
-             hours.findZero(opticalSensorPinHour); 
-             
-             h_counter;
-             m_counter;
-             
-             while(mode == SET){                    
-                   encoder *thisEncoder;
-                   thisEncoder=AdaEncoder::genie(&clicks, &id);
-                   if (thisEncoder != NULL) {
-                      thisEncoder=AdaEncoder::getFirstEncoder();
+            minutes.findZero(opticalSensorPinMinute);
+            hours.findZero(opticalSensorPinHour); 
+                       
+            while(mode == SET){                    
+					encoder *thisEncoder;
+					thisEncoder=AdaEncoder::genie(&clicks, &id);
+					if (thisEncoder != NULL) {
+						thisEncoder=AdaEncoder::getFirstEncoder();
           
-                      if (clicks > 0) {
-                        if (id == 'a')
-                        {
-                            h_counter++;
-                            hours.updateMotorPosition(-1);
-                         }
-                        else
-                        {
-                            m_counter++;
-                            minutes.updateMotorPosition(-1);
-                        }
-                      }
-                      if (clicks < 0) {
-                        if (id == 'a')
-                        {
-                            h_counter--;
-                            hours.updateMotorPosition(1);
-                        }
-                        else
-                        {
-                            m_counter--;
-                            minutes.updateMotorPosition(1);                  
-                        }
+						if (clicks > 0) {
+							if (id == 'a')
+							{
+								h_counter++;
+								hours.updateMotorPosition(-1);
+							}
+							else
+							{
+								m_counter++;
+								minutes.updateMotorPosition(-1);
+							}
+						}
+						if (clicks < 0) {
+							if (id == 'a')
+							{
+								h_counter--;
+								hours.updateMotorPosition(1);
+							}
+							else
+							{
+								m_counter--;
+								minutes.updateMotorPosition(1);                  
+							}
                        }
                     }
                     
                     if(h_counter<0 && h_counter>(-200)){
-                      h_count = h_counter + 200;
+						h_count = h_counter + 200;
                     }
                     else {
-                      h_count = h_counter;
+						h_count = h_counter;
                     }
                     
                     if(m_counter<0 && m_counter>(-200)){
@@ -196,7 +194,20 @@ void loop()
                     
                     else {
                       m_count = m_counter;
+                      m_count = m_counter;
                     }
+					
+					if (Serial.available() > 0){
+						while(Serial.available() > 0){
+							comm = Serial.parseInt();
+						}
+						if (comm == GET_TIME){
+							Serial.print(String(hours.calculateHourPosition(h_count%200)) + ":" + String(minutes.calculateMinutePosition(m_count%200)));
+												
+						}
+					
+					}
+					
                       
                     //Serial.println(h_count);
                     //Serial.println(hours.calculateHourPosition(h_count%200));
@@ -207,11 +218,11 @@ void loop()
                     // Empty Serial Buffer 
                    //while (Serial.read() >= 0);
                    
-                   while(Serial.available() > 0){
-                     mode = Serial.parseInt();
+					while(Serial.available() > 0){
+						mode = Serial.parseInt();
                     
-                      minutes.findZero(opticalSensorPinMinute);
-                      hours.findZero(opticalSensorPinHour);
+						minutes.findZero(opticalSensorPinMinute);
+						hours.findZero(opticalSensorPinHour);
                    }
                   
                    
