@@ -80,7 +80,7 @@ void setup()
    
    myLCD.clearLCD();
 
-    myLCD.writeToScreen("ClockAide",0,0);
+    myLCD.writeToScreen("ClockAide",0,0);  
     myLCD.writeToScreen("Loading...",1,0);
     digitalWrite(led, HIGH);
     while(Serial.available() == 0);
