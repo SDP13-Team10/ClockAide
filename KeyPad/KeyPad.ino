@@ -210,7 +210,7 @@ void loop()
              char p = '\0';
              myLCD.clearLCD();
              myLCD.writeToScreen("Set Mode", 0,0);
-             // Recieve time from Pi
+             // Receive time from Pi
              while(Serial.available() == 0);
              while(Serial.available()>0){
                   pi_hour = Serial.parseInt();
@@ -235,17 +235,16 @@ void loop()
                  myLCD.writeToScreen("Processing...", 0,0);
                  
                  response = getFromPi();
-                 if (response == GOOD){            // Recieve name from PI
+                 if (response == GOOD){            // Receive name from PI
                      myLCD.clearLCD();
                      myLCD.writeToScreen("Good Job", 0,0);
-                     //Name = getNameFromPi();
                      myLCD.writeToScreen(Name, 1,0);            
                  }
                  else{
                  myLCD.clearLCD();
                  myLCD.writeToScreen("That's Wrong", 0,0);
                  myLCD.writeToScreen("Try Again", 1,0);
-            }
+				}
              }
             else{
                  myLCD.clearLCD();
