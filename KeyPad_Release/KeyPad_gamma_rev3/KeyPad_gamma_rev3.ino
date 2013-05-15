@@ -66,10 +66,14 @@ void setup()
     Serial.begin(9600);
     delay(500);
    
-   /* 
+   
+   /*
+   //Use this to set the LCD display splash screen:
+   //Modify line 1 and line 2 below
+   //Uncomment this block 
    myLCD.clearLCD(); 
-   myLCD.writeToScreen("ClockAide",0,0);
-   myLCD.writeToScreen("SDP '13 - UMass",1,0);
+   myLCD.writeToScreen("ClockAide",0,0); //Line 1
+   myLCD.writeToScreen("SDP '13 - UMass",1,0); // Line 2
    myLCD.setSplash();
    delay(5000);
    */
