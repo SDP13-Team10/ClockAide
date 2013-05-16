@@ -135,7 +135,7 @@ void loop()
              }
        break; 
              
-       case CHECK_ID:            // Check ID 
+       case AUTH:            // Check ID 
              myLCD.clearLCD();
              myLCD.writeToScreen("Enter ID#:", 0,0);
              myLCD.selectLineTwo();
