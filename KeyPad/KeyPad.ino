@@ -171,6 +171,15 @@ void loop()
                  }
                  
              }
+			 else if(response == TEACHER){
+				mode = TEACHER
+			 
+			 }
+			 
+			 else if(response == ADMIN){
+				mode = ADMIN
+			 
+			 }
              else{
                  myLCD.clearLCD();
                  myLCD.writeToScreen("Invalid ID", 0,0);
@@ -193,12 +202,57 @@ void loop()
                  myLCD.clearLCD();
                  myLCD.writeToScreen("Good Job", 0,0);
                  //Name = getNameFromPi();
-                 myLCD.writeToScreen(Name, 1,0);            
+                 myLCD.writeToScreen(Name, 1,0);
+				temp = getFromPi();
+				if(temp == MORE){
+					myLCD.clearLCD();
+					myLCD.writeToScreen("Try again?", 0,0);
+					myLCD.writeToScreen("(1) Yes (2) No", 1,0);
+					
+					char m = keypad.waitForKey();
+					
+					if (m=='1'){
+						sendToPi(ACK);
+						mode = getFromPi();
+					}
+					else if (m == '2'){
+						sendToPi(NAK);
+						mode = getFromPi();
+					}
+					else{
+						myLCD.clearLCD();
+						myLCD.writeToScreen("Invalid Choice", 0,0);
+						myLCD.writeToScreen("Exiting...", 1,0);
+						mode = 0;
+						delay(2500);
+					}					
+				}
             }
             else{
-                 myLCD.clearLCD();
-                 myLCD.writeToScreen("That's Wrong", 0,0);
-                 myLCD.writeToScreen("Try Again", 1,0);
+                myLCD.clearLCD();
+                myLCD.writeToScreen("That's Wrong", 0,0);
+                delay(2500);
+				 
+				myLCD.clearLCD();
+				myLCD.writeToScreen("Try again?", 0,0);
+				myLCD.writeToScreen("(1) Yes (2) No", 1,0);
+					
+				char m = keypad.waitForKey();
+				if (m=='1'){
+					sendToPi(ACK);
+					mode = getFromPi();
+				}
+				else if (m == '2'){
+					sendToPi(NAK);
+					mode = getFromPi();
+				}
+				else{
+					myLCD.clearLCD();
+					myLCD.writeToScreen("Invalid Choice", 0,0);
+					myLCD.writeToScreen("Exiting...", 1,0);
+					mode = 0;
+					delay(2500);
+				}					
             }
             mode = getFromPi();
             
@@ -236,14 +290,58 @@ void loop()
                  
                  response = getFromPi();
                  if (response == GOOD){            // Receive name from PI
-                     myLCD.clearLCD();
-                     myLCD.writeToScreen("Good Job", 0,0);
-                     myLCD.writeToScreen(Name, 1,0);            
+                    myLCD.clearLCD();
+                    myLCD.writeToScreen("Good Job", 0,0);
+                    myLCD.writeToScreen(Name, 1,0); 
+					temp = getFromPi();
+					if(temp == MORE){
+						myLCD.clearLCD();
+						myLCD.writeToScreen("Try again?", 0,0);
+						myLCD.writeToScreen("(1) Yes (2) No", 1,0);
+						
+						char m = keypad.waitForKey();
+						
+						if (m=='1'){
+							sendToPi(ACK);
+							mode = getFromPi();
+						}
+						else if (m == '2'){
+							sendToPi(NAK);
+							mode = getFromPi();
+						}
+						else{
+							myLCD.clearLCD();
+							myLCD.writeToScreen("Invalid Choice", 0,0);
+							myLCD.writeToScreen("Exiting...", 1,0);
+							mode = 0;
+							delay(2500);
+						}					
+					}
                  }
                  else{
                  myLCD.clearLCD();
                  myLCD.writeToScreen("That's Wrong", 0,0);
-                 myLCD.writeToScreen("Try Again", 1,0);
+                 delay(2500)				 
+				 myLCD.clearLCD();
+				myLCD.writeToScreen("Try again?", 0,0);
+				myLCD.writeToScreen("(1) Yes (2) No", 1,0);
+					
+				char m = keypad.waitForKey();
+				if (m=='1'){
+					sendToPi(ACK);
+					mode = getFromPi();
+				}
+				else if (m == '2'){
+					sendToPi(NAK);
+					mode = getFromPi();
+				}
+				else{
+					myLCD.clearLCD();
+					myLCD.writeToScreen("Invalid Choice", 0,0);
+					myLCD.writeToScreen("Exiting...", 1,0);
+					mode = 0;
+					delay(2500);
+				}					
 				}
              }
             else{
@@ -260,6 +358,12 @@ void loop()
              // TEACHER Mode
              myLCD.clearLCD();
              myLCD.writeToScreen("TEACHER MODE", 0,0);
+       break;
+	   
+	   case ADMIN: 
+             // ADMIN Mode
+             myLCD.clearLCD();
+             myLCD.writeToScreen("ADMIN MODE", 0,0);
        break;
        
        default:
